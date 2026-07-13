@@ -1,0 +1,61 @@
+<mxGraphModel dx="1400" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="820" math="0" shadow="0" adaptiveColors="auto">
+  <root>
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+    <mxCell id="band-actors" value="External actors" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#cccccc;verticalAlign=top;align=left;fontStyle=2;fontColor=#666666;spacingLeft=8;spacingTop=4" parent="1" vertex="1"><mxGeometry x="20" y="20" width="1360" height="130" as="geometry"/></mxCell>
+    <mxCell id="band-platform" value="Aegis Identity Platform  (Kubernetes: EKS / AKS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef6ff;strokeColor=#9cc3e6;verticalAlign=top;align=left;fontStyle=2;fontColor=#2f5b86;spacingLeft=10;spacingTop=6" parent="1" vertex="1"><mxGeometry x="20" y="180" width="1360" height="600" as="geometry"/></mxCell>
+    <mxCell id="band-backends" value="Stateful backends  (AWS: RDS/ElastiCache/MSK/KMS  ·  Azure: PG Flexible/Cache/Event Hubs/Key Vault)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eafaf0;strokeColor=#82b366;verticalAlign=top;align=left;fontStyle=2;fontColor=#4a7a3a;spacingLeft=10;spacingTop=4" parent="1" vertex="1"><mxGeometry x="40" y="640" width="1320" height="120" as="geometry"/></mxCell>
+
+    <mxCell id="a-user" value="End user&#xa;(browser)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656" parent="1" vertex="1"><mxGeometry x="40" y="50" width="240" height="70" as="geometry"/></mxCell>
+    <mxCell id="a-app" value="Customer app&#xa;(OIDC / SAML SP)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656" parent="1" vertex="1"><mxGeometry x="310" y="50" width="240" height="70" as="geometry"/></mxCell>
+    <mxCell id="a-m2m" value="Machine / workload&#xa;(M2M host-to-host)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656" parent="1" vertex="1"><mxGeometry x="580" y="50" width="240" height="70" as="geometry"/></mxCell>
+    <mxCell id="a-admin" value="Tenant admin" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656" parent="1" vertex="1"><mxGeometry x="850" y="50" width="240" height="70" as="geometry"/></mxCell>
+    <mxCell id="a-idp" value="External IdP&#xa;Google / Microsoft / Apple / GitHub&#xa;corporate SAML" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00" parent="1" vertex="1"><mxGeometry x="1120" y="45" width="240" height="80" as="geometry"/></mxCell>
+
+    <mxCell id="s-gw" value="&lt;b&gt;edge-gateway&lt;/b&gt;&#xa;TLS 1.3 · tenant resolution · routing · rate limit · WAF hooks · mTLS ingress" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#1a3c5e" parent="1" vertex="1"><mxGeometry x="60" y="210" width="1280" height="60" as="geometry"/></mxCell>
+
+    <mxCell id="s-as" value="&lt;b&gt;authorization-server&lt;/b&gt;&#xa;OIDC / OAuth2 / M2M&#xa;+ interactive login" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366" parent="1" vertex="1"><mxGeometry x="60" y="320" width="235" height="80" as="geometry"/></mxCell>
+    <mxCell id="s-saml" value="&lt;b&gt;saml-idp-service&lt;/b&gt;&#xa;custom SAML 2.0 IdP&#xa;(OpenSAML 5)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf" parent="1" vertex="1"><mxGeometry x="325" y="320" width="235" height="80" as="geometry"/></mxCell>
+    <mxCell id="s-social" value="&lt;b&gt;social-broker-service&lt;/b&gt;&#xa;inbound federation&#xa;(social + SAML/OIDC SP)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf" parent="1" vertex="1"><mxGeometry x="590" y="320" width="235" height="80" as="geometry"/></mxCell>
+    <mxCell id="s-mfa" value="&lt;b&gt;mfa-webauthn-service&lt;/b&gt;&#xa;passkeys / TOTP&#xa;step-up MFA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf" parent="1" vertex="1"><mxGeometry x="855" y="320" width="235" height="80" as="geometry"/></mxCell>
+    <mxCell id="s-admin" value="&lt;b&gt;admin-api-service&lt;/b&gt;&#xa;policy · RBAC&#xa;System-Log API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf" parent="1" vertex="1"><mxGeometry x="1120" y="320" width="235" height="80" as="geometry"/></mxCell>
+
+    <mxCell id="s-id" value="&lt;b&gt;identity-service&lt;/b&gt;&#xa;users / credentials (Argon2id) / groups&#xa;— crown-jewel data, tightest policy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366" parent="1" vertex="1"><mxGeometry x="120" y="470" width="300" height="80" as="geometry"/></mxCell>
+    <mxCell id="s-ten" value="&lt;b&gt;tenant-service&lt;/b&gt;&#xa;orgs / tenants / domains&#xa;per-tenant config + key refs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366" parent="1" vertex="1"><mxGeometry x="560" y="470" width="280" height="80" as="geometry"/></mxCell>
+    <mxCell id="s-scim" value="&lt;b&gt;scim-provisioning-service&lt;/b&gt;&#xa;SCIM 2.0 inbound / outbound" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf" parent="1" vertex="1"><mxGeometry x="980" y="470" width="280" height="80" as="geometry"/></mxCell>
+
+    <mxCell id="b-pg" value="PostgreSQL&#xa;db-per-service" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366" parent="1" vertex="1"><mxGeometry x="120" y="672" width="170" height="76" as="geometry"/></mxCell>
+    <mxCell id="b-redis" value="Redis&#xa;sessions · state&#xa;rate-limit" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450" parent="1" vertex="1"><mxGeometry x="470" y="672" width="150" height="76" as="geometry"/></mxCell>
+    <mxCell id="b-kafka" value="Kafka&#xa;domain + audit&#xa;events" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00" parent="1" vertex="1"><mxGeometry x="760" y="672" width="150" height="76" as="geometry"/></mxCell>
+    <mxCell id="b-kms" value="KMS / Key Vault&#xa;per-tenant signing keys&#xa;(envelope encryption)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6" parent="1" vertex="1"><mxGeometry x="1050" y="672" width="260" height="76" as="geometry"/></mxCell>
+
+    <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="a-user" target="s-gw" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="a-app" target="s-gw" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="a-m2m" target="s-gw" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="a-admin" target="s-gw" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+    <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-gw" target="s-as" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-gw" target="s-saml" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-gw" target="s-social" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-gw" target="s-mfa" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-gw" target="s-admin" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+    <mxCell id="e10" value="federate" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;strokeColor=#d79b00;endArrow=classic;fontColor=#a06000" parent="1" source="s-social" target="a-idp" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+    <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-as" target="s-id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-as" target="s-ten" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e13" value="step-up" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=classic;fontColor=#666666" parent="1" source="s-as" target="s-mfa" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-social" target="s-id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-saml" target="s-id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-scim" target="s-id" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="s-admin" target="s-ten" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+    <mxCell id="e18" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#82b366" parent="1" source="s-id" target="b-pg" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e19" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#82b366" parent="1" source="s-ten" target="b-pg" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#82b366" parent="1" source="s-as" target="b-pg" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#b85450" parent="1" source="s-as" target="b-redis" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e22" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#d79b00" parent="1" source="s-id" target="b-kafka" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#9673a6" parent="1" source="s-as" target="b-kms" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="e24" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#9673a6" parent="1" source="s-saml" target="b-kms" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+  </root>
+</mxGraphModel>
