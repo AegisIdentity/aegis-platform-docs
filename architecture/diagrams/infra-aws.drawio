@@ -41,13 +41,10 @@
     <mxCell id="con2" value="admin-console&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;S3 + CloudFront (OAC) or Fargate nginx&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
       <mxGeometry x="800" y="335" width="180" height="80" as="geometry"/>
     </mxCell>
-    <mxCell id="svc2" value="service tasks (Cloud Map service discovery, ECS Service Connect TLS)&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;identity · mfa-webauthn · social-broker · tenant · admin-api · scim&lt;br&gt;each: own task role (least privilege), own SG, JWT validation + scopes on every request&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=1;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
-      <mxGeometry x="320" y="440" width="660" height="80" as="geometry"/>
+    <mxCell id="svc2" value="service tasks (Cloud Map service discovery, ECS Service Connect TLS)&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;identity · mfa-webauthn · social-broker · tenant · admin-api · scim&lt;br&gt;each: own task role (least privilege), own SG, JWT validation + scopes on every request&lt;br&gt;AWS APIs via VPC endpoints (PrivateLink): ECR, Secrets Manager, KMS, Logs, S3 — never over the internet&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=1;verticalAlign=top;spacingTop=8;" vertex="1" parent="1">
+      <mxGeometry x="320" y="440" width="660" height="95" as="geometry"/>
     </mxCell>
-    <mxCell id="vpce" value="VPC endpoints (PrivateLink): ECR, Secrets Manager, KMS, CloudWatch Logs, S3 — AWS API calls never traverse the internet" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8F5E9;strokeColor=#4CAF50;fontSize=10;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="320" y="545" width="660" height="60" as="geometry"/>
-    </mxCell>
-    <mxCell id="dat" value="Private data subnets (2 AZs) — no route to IGW/NAT; reachable only from app-tier SGs" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fillColor=#F3E8F7;strokeColor=#9673A6;fontSize=11;" vertex="1" parent="1">
+    <mxCell id="dat" value="Private data subnets (2 AZs) — no route to IGW/NAT; reachable only from app-tier SGs" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=bottom;fontStyle=1;fillColor=#F3E8F7;strokeColor=#9673A6;fontSize=11;" vertex="1" parent="1">
       <mxGeometry x="300" y="650" width="940" height="220" as="geometry"/>
     </mxCell>
     <mxCell id="rds" value="RDS PostgreSQL (Multi-AZ)&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;database-per-service, KMS-encrypted at rest, TLS in transit, IAM auth, automated backups + PITR&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
@@ -89,19 +86,19 @@
     <mxCell id="a3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="waf" target="alb" value="">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="alb" target="gwt" value="TLS to task SG">
+    <mxCell id="a4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="alb" target="gwt" value="TLS to task SG">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="gwt" target="ast" value="/{tenant}/oauth2/*">
+    <mxCell id="a5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="gwt" target="ast">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="a6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=0.5;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="gwt" target="svc2" value="scoped bearer">
+    <mxCell id="a6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=0.5;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="gwt" target="svc2">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="a7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;dashed=1;exitX=0.5;exitY=1;entryX=0.6;entryY=0;" edge="1" parent="1" source="ast" target="svc2" value="service JWTs / JWKS">
+    <mxCell id="a7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;dashed=1;exitX=0.5;exitY=1;entryX=0.6;entryY=0;" edge="1" parent="1" source="ast" target="svc2">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="a8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=0.2;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="svc2" target="rds" value="TLS, IAM auth">
+    <mxCell id="a8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=0.2;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="svc2" target="rds" value="TLS, IAM auth">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
     <mxCell id="a9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=0.55;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="svc2" target="ec" value="">
@@ -110,7 +107,7 @@
     <mxCell id="a10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=0.85;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="svc2" target="msk" value="">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="a11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;dashed=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" edge="1" parent="1" source="ast" target="nat" value="egress to external IdPs only">
+    <mxCell id="a11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;dashed=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;" edge="1" parent="1" source="ast" target="nat" value="egress to external IdPs only">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
     <mxCell id="zt" value="&lt;b&gt;Zero-trust on AWS&lt;/b&gt;&lt;br&gt;1. Identity-based access everywhere: per-task IAM roles, RDS IAM auth, MSK IAM auth, KMS grants per service — no shared credentials.&amp;nbsp;&amp;nbsp;2. Network as containment, not trust: tasks have no public IPs; SG-to-SG references only (ALB→gateway, gateway→services, services→data); data subnets have no internet route; VPC endpoints keep AWS traffic private.&amp;nbsp;&amp;nbsp;3. Every service still validates JWT signature + issuer allowlist + scope on every request — the VPC is not a trust boundary.&amp;nbsp;&amp;nbsp;4. Per-tenant issuers via the ALB/gateway host; per-tenant signing keys wrapped in KMS, rotated with overlap.&amp;nbsp;&amp;nbsp;5. Encrypt everything: TLS 1.2+ in transit end-to-end, KMS at rest (RDS, EBS, logs, S3).&amp;nbsp;&amp;nbsp;6. Detect + audit: CloudTrail (org trail), GuardDuty, Security Hub, WAF logs, VPC flow logs → CloudWatch; alerts on drift.&amp;nbsp;&amp;nbsp;7. Supply chain: ECR scan-on-push, immutable tags, CI-only deploys via Terraform." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;align=left;spacingLeft=10;spacing=6;" vertex="1" parent="1">

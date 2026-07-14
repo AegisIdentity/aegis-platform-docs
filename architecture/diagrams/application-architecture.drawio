@@ -1,4 +1,4 @@
-<mxGraphModel adaptiveColors="auto" dx="1600" dy="1000" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1060" math="0" shadow="0">
+<mxGraphModel adaptiveColors="auto" dx="1600" dy="1000" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1780" pageHeight="1060" math="0" shadow="0">
   <root>
     <mxCell id="0"/>
     <mxCell id="1" parent="0"/>
@@ -30,48 +30,48 @@
       <mxGeometry x="370" y="180" width="250" height="130" as="geometry"/>
     </mxCell>
     <mxCell id="mesh" value="Private service network — no direct public exposure" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fillColor=#F5F7FA;strokeColor=#8892A6;fontSize=13;" vertex="1" parent="1">
-      <mxGeometry x="690" y="70" width="560" height="620" as="geometry"/>
+      <mxGeometry x="780" y="70" width="560" height="620" as="geometry"/>
     </mxCell>
     <mxCell id="as" value="authorization-server :9000&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;Spring Authorization Server 7.1 — OAuth 2.1 / OIDC&lt;br&gt;per-tenant issuers (multipleIssuersAllowed) + per-tenant signing keys (kid aegis-&amp;lt;tenant&amp;gt;)&lt;br&gt;hosted login (password / passkey / social / SAML), MFA step-up gate&lt;br&gt;tenant-app embedded auth API (webauthn / social/native / interaction-code)&lt;br&gt;aggregate JWKS: GET /internal/jwks (union of tenant public keys)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;align=left;spacingLeft=8;" vertex="1" parent="1">
-      <mxGeometry x="710" y="105" width="520" height="120" as="geometry"/>
+      <mxGeometry x="800" y="105" width="520" height="120" as="geometry"/>
     </mxCell>
     <mxCell id="s1" value="identity-service :9102&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;users, groups, Argon2id credentials, lockout, signup policy, branding, system log&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="710" y="245" width="250" height="70" as="geometry"/>
+      <mxGeometry x="800" y="245" width="250" height="70" as="geometry"/>
     </mxCell>
     <mxCell id="s2" value="mfa-webauthn-service :9103&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;TOTP (RFC 6238), passkeys (webauthn4j), per-tenant Relying Party config&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="980" y="245" width="250" height="70" as="geometry"/>
+      <mxGeometry x="1070" y="245" width="250" height="70" as="geometry"/>
     </mxCell>
     <mxCell id="s3" value="social-broker-service :9105&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;per-tenant IdP catalog (OIDC + SAML), client registrations for the AS&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="710" y="335" width="250" height="70" as="geometry"/>
+      <mxGeometry x="800" y="335" width="250" height="70" as="geometry"/>
     </mxCell>
     <mxCell id="s4" value="tenant-service :9101&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;organizations, onboarding, custom domains (CNAME + TXT verify)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="980" y="335" width="250" height="70" as="geometry"/>
+      <mxGeometry x="1070" y="335" width="250" height="70" as="geometry"/>
     </mxCell>
     <mxCell id="s5" value="admin-api-service :9107&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;RBAC: admin roles + permissions (SUPER_ADMIN, HELP_DESK, ...)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="710" y="425" width="250" height="70" as="geometry"/>
+      <mxGeometry x="800" y="425" width="250" height="70" as="geometry"/>
     </mxCell>
     <mxCell id="s6" value="scim-provisioning-service :9106&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;SCIM 2.0 inbound (/scim/v2), connector tokens, provisions via identity-service&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="980" y="425" width="250" height="70" as="geometry"/>
+      <mxGeometry x="1070" y="425" width="250" height="70" as="geometry"/>
     </mxCell>
-    <mxCell id="zt1" value="Zero-trust inside the mesh: every service validates JWTs itself (split-horizon decoder: aggregate JWKS fetched in-network + issuer allowlist incl. gateway per-tenant issuers), enforces scopes per endpoint, and scopes every query by tenant. The network is never trusted; the gateway routes but does not authorize." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFCC;strokeColor=#D6B656;fontSize=10;align=left;spacingLeft=8;spacing=4;" vertex="1" parent="1">
-      <mxGeometry x="710" y="520" width="520" height="80" as="geometry"/>
+    <mxCell id="zt1" value="Zero-trust inside the mesh: every service validates JWTs itself (split-horizon decoder: aggregate JWKS fetched in-network + issuer allowlist incl. gateway per-tenant issuers), enforces scopes per endpoint, and scopes every query by tenant. The network is never trusted; the gateway routes but does not authorize. Dashed arrows = AS-internal calls over short-lived service JWTs (credential verify to identity, MFA/passkey ceremonies to mfa) and outbound federation." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFCC;strokeColor=#D6B656;fontSize=10;align=left;spacingLeft=8;spacing=4;" vertex="1" parent="1">
+      <mxGeometry x="800" y="520" width="520" height="80" as="geometry"/>
     </mxCell>
     <mxCell id="data" value="Data tier (private subnets / network)" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fillColor=#F5F7FA;strokeColor=#8892A6;fontSize=13;" vertex="1" parent="1">
-      <mxGeometry x="1290" y="70" width="270" height="620" as="geometry"/>
+      <mxGeometry x="1470" y="70" width="270" height="620" as="geometry"/>
     </mxCell>
     <mxCell id="d1" value="PostgreSQL&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;database-per-service (ADR-0002):&lt;br&gt;aegis_authz, aegis_identity, aegis_tenant, aegis_social, aegis_mfa, aegis_admin, aegis_scim&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="1320" y="110" width="210" height="130" as="geometry"/>
+      <mxGeometry x="1500" y="110" width="210" height="130" as="geometry"/>
     </mxCell>
     <mxCell id="d2" value="Redis&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;rate limiting / caching (edge)&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="1320" y="270" width="210" height="80" as="geometry"/>
+      <mxGeometry x="1500" y="270" width="210" height="80" as="geometry"/>
     </mxCell>
     <mxCell id="d3" value="Kafka&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;event backbone (audit / lifecycle events)&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#E1D5E7;strokeColor=#9673A6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="1320" y="380" width="210" height="80" as="geometry"/>
+      <mxGeometry x="1500" y="380" width="210" height="80" as="geometry"/>
     </mxCell>
     <mxCell id="d4" value="KMS / Key Vault (production)&lt;br&gt;&lt;font style=&quot;font-size:10px;font-weight:normal&quot;&gt;per-tenant signing keys wrapped at rest, rotation with overlap (ADR-0007)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-      <mxGeometry x="1320" y="490" width="210" height="80" as="geometry"/>
+      <mxGeometry x="1500" y="490" width="210" height="80" as="geometry"/>
     </mxCell>
-    <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" parent="1" source="cl1" target="gw" value="OIDC + management APIs">
+    <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" parent="1" source="cl1" target="gw" value="OIDC + APIs">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
     <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="cl2" target="gw" value="">
@@ -80,38 +80,43 @@
     <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=0;entryY=0.7;" edge="1" parent="1" source="cl3" target="gw" value="">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=0.3;entryY=1;" edge="1" parent="1" source="cl4" target="gw" value="M2M + APIs">
+    <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0.3;entryY=1;" edge="1" parent="1" source="cl4" target="gw" value="M2M">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;exitX=1;exitY=0.5;entryX=0.6;entryY=1;" edge="1" parent="1" source="cl5" target="gw" value="SCIM push (bearer connector token)">
+    <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0.6;entryY=1;" edge="1" parent="1" source="cl5" target="gw" value="SCIM push">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.4;entryX=0;entryY=0.3;" edge="1" parent="1" source="gw" target="as" value="/{tenant}/oauth2/*, login, tenant-app API">
-      <mxGeometry x="-0.55" relative="1" as="geometry"/>
-    </mxCell>
-    <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" parent="1" source="gw" target="s1" value="management APIs (scoped bearer)">
-      <mxGeometry x="-0.55" relative="1" as="geometry"/>
-    </mxCell>
-    <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;dashed=1;exitX=0.2;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="as" target="s1" value="verify credentials&#10;(service JWT)">
+    <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.4;entryX=0;entryY=0.3;" edge="1" parent="1" source="gw" target="as">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;dashed=1;exitX=0.8;exitY=1;entryX=0.8;entryY=0;" edge="1" parent="1" source="as" target="s2" value="MFA / passkey ceremonies">
+    <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.7;entryX=0;entryY=0.5;" edge="1" parent="1" source="gw" target="s1">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;dashed=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="s3" target="s5" value="">
+    <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;dashed=1;exitX=0.2;exitY=1;entryX=0.2;entryY=0;" edge="1" parent="1" source="as" target="s1">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
-    <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;dashed=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="as" target="cl6" value="federated login (OIDC redirect / SAML)">
+    <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;dashed=1;exitX=0.8;exitY=1;entryX=0.8;entryY=0;" edge="1" parent="1" source="as" target="s2">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
+    <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;dashed=1;exitX=0;exitY=0.55;entryX=1;entryY=0.5;" edge="1" parent="1" source="as" target="cl6"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="330" y="171"/><mxPoint x="330" y="595"/></Array></mxGeometry></mxCell>
     <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.3;entryX=0;entryY=0.4;" edge="1" parent="1" source="mesh" target="data" value="TLS, private endpoints">
       <mxGeometry relative="1" as="geometry"/>
     </mxCell>
     <mxCell id="ztbox" value="&lt;b&gt;Zero-trust posture (all environments)&lt;/b&gt;&lt;br&gt;1. One public front door: only the gateway (and static console) are exposed; services and databases have no public endpoints.&amp;nbsp;&amp;nbsp;2. Identity over network: every request carries a JWT; every service validates signature + issuer allowlist + scope itself — no implicit trust between services.&amp;nbsp;&amp;nbsp;3. Per-tenant cryptography: each tenant has its own issuer and signing key; a token for tenant A cannot be forged for tenant B.&amp;nbsp;&amp;nbsp;4. Least privilege: scoped clients, RBAC admin roles, database-per-service, write-only secrets.&amp;nbsp;&amp;nbsp;5. Anti-abuse: PKCE mandatory, no ROPC/implicit, Argon2id + lockout, anti-enumeration responses, JIT-link only on verified email, CSP/security headers on hosted pages." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=10;align=left;spacingLeft=10;spacing=6;" vertex="1" parent="1">
-      <mxGeometry x="40" y="720" width="1520" height="110" as="geometry"/>
+      <mxGeometry x="40" y="720" width="1700" height="110" as="geometry"/>
     </mxCell>
     <mxCell id="leg" value="&lt;b&gt;Issuers&lt;/b&gt;: per tenant, through the gateway — https://&amp;lt;gateway&amp;gt;/{tenant} (discovery, authorize, token, JWKS, userinfo). Tokens are signed with the tenant key; resource servers verify via the in-network aggregate JWKS." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontSize=10;align=left;spacingLeft=10;spacing=4;" vertex="1" parent="1">
-      <mxGeometry x="40" y="845" width="1520" height="50" as="geometry"/>
+      <mxGeometry x="40" y="845" width="1700" height="50" as="geometry"/>
+    </mxCell>
+
+    <mxCell id="t_e6" value="per-tenant OAuth, hosted login, tenant-app API" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+      <mxGeometry x="628" y="196" width="164" height="30" as="geometry"/>
+    </mxCell>
+    <mxCell id="t_e7" value="management APIs (scoped bearer)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+      <mxGeometry x="628" y="284" width="164" height="28" as="geometry"/>
+    </mxCell>
+    <mxCell id="t_e11" value="federated login (OIDC / SAML)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=10;align=center;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="1">
+      <mxGeometry x="275" y="415" width="120" height="28" as="geometry"/>
     </mxCell>
   </root>
 </mxGraphModel>

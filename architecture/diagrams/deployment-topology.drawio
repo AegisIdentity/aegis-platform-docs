@@ -31,21 +31,21 @@
 
     <mxCell id="te1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;dashed=1;strokeColor=#9673a6" parent="1" source="tf" target="band-aws" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="te2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;dashed=1;strokeColor=#9673a6" parent="1" source="tf" target="band-azure" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
-    <mxCell id="te3" value="push images" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;dashed=1;strokeColor=#666666;fontColor=#666666" parent="1" source="ci" target="aws-ecr" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
-    <mxCell id="te4" value="push images" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;dashed=1;strokeColor=#666666;fontColor=#666666" parent="1" source="ci" target="az-acr" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="te3" value="push images" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;dashed=1;strokeColor=#666666;fontColor=#666666;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=1;entryY=0.5;" parent="1" source="ci" target="aws-ecr" edge="1"><mxGeometry x="0.3" relative="1" as="geometry"><Array as="points"><mxPoint x="530" y="140"/><mxPoint x="700" y="140"/><mxPoint x="700" y="650"/></Array></mxGeometry></mxCell>
+    <mxCell id="te4" value="push images" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;dashed=1;strokeColor=#666666;fontColor=#666666;labelBackgroundColor=#FFFFFF;exitX=0.85;exitY=1;entryX=1;entryY=0.5;" parent="1" source="ci" target="az-acr" edge="1"><mxGeometry x="0.3" relative="1" as="geometry"><Array as="points"><mxPoint x="635" y="140"/><mxPoint x="1378" y="140"/><mxPoint x="1378" y="650"/></Array></mxGeometry></mxCell>
 
     <mxCell id="ae1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="aws-dns" target="aws-alb" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="ae2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="aws-alb" target="aws-eks" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="ae3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#82b366" parent="1" source="aws-eks" target="aws-rds" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="ae4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#b85450" parent="1" source="aws-eks" target="aws-redis" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="ae5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#d79b00" parent="1" source="aws-eks" target="aws-msk" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
-    <mxCell id="ae6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#9673a6" parent="1" source="aws-eks" target="aws-sec" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="ae6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#9673a6;exitX=0.32;exitY=1;entryX=0.58;entryY=0;" parent="1" source="aws-eks" target="aws-sec" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
 
     <mxCell id="ze1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="az-dns" target="az-agw" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="ze2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic" parent="1" source="az-agw" target="az-aks" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="ze3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#82b366" parent="1" source="az-aks" target="az-pg" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="ze4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#b85450" parent="1" source="az-aks" target="az-cache" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
     <mxCell id="ze5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#d79b00" parent="1" source="az-aks" target="az-eh" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
-    <mxCell id="ze6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#9673a6" parent="1" source="az-aks" target="az-kv" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+    <mxCell id="ze6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;strokeColor=#9673a6;exitX=0.32;exitY=1;entryX=0.58;entryY=0;" parent="1" source="az-aks" target="az-kv" edge="1"><mxGeometry relative="1" as="geometry"/></mxCell>
   </root>
 </mxGraphModel>
