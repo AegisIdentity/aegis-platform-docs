@@ -1,13 +1,20 @@
 # Aegis — design & roadmap for the deferred large capabilities
 
-These four capabilities are **specified and designed here but deliberately not built** this session,
-per an explicit decision: a half-built version of any of them is worse than none, most acutely for
-the SAML IdP, whose whole job is to parse attacker-controlled XML. This document is the contract for
-building them later — design, security requirements, and sequencing — so the work starts from a
-considered position rather than a blank file.
-
-Status legend: **⛔ not started** · **🌱 seam exists** (an interface or extension point is already in
-place) · **🔑 KMS-ready** (data model already supports the target without migration).
+> **UPDATE 2026-08-18 (second session):** two of these four are now **BUILT and verified**, not
+> deferred:
+> - **Kafka event backbone → DONE.** Platform-wide, CloudTrail-style capture is live: a shared
+>   `KafkaAuditEventPublisher` (composed with the log floor) streams every service's security events
+>   to one topic; an audit **sink** in `admin-api-service` consumes them into an append-only
+>   `audit_log` store, queryable via `/api/v1/admin/system-log` (tenant-scoped). Proven end-to-end on
+>   the running stack (auth success/failure, authz denials, and identity/tenant/admin domain events
+>   all captured; failed-login actors hashed) and by a Testcontainers Kafka IT (`AuditSinkIT`, Confluent broker).
+> - **KMS envelope encryption → DONE.** Tenant signing keys' data key can be KMS-wrapped: a
+>   `DataKeyProvider` seam (static vs KMS-envelope), an `AwsKmsKeyUnwrapper` (AWS SDK v2), unwrapped
+>   at startup. Proven against **real LocalStack KMS** (`AwsKmsUnwrapIT`) — the actual SDK Decrypt
+>   path, no cloud account. Off by default (`aegis.crypto.kms.enabled`); the static-key posture
+>   remains the interim default.
+>
+> **Still deferred:** the SAML IdP (§1) and mTLS/mesh (§4) — unchanged, for the reasons below.
 
 ---
 
@@ -53,7 +60,7 @@ validation are live, so it is never the least-hardened thing in production.
 
 ---
 
-## 2. Kafka event backbone — ⛔ not started · 🌱 seam exists
+## 2. Kafka event backbone — ✅ BUILT (2026-08-18) · was: seam exists
 
 **What exists:** the `audit-commons` library already defines the seam — `AuditEventPublisher` (SPI)
 with a `LoggingAuditEventPublisher` that every service gets by autoconfiguration. Events are emitted
@@ -83,7 +90,7 @@ System Log product surface and cross-service provisioning, and de-risks the SCIM
 
 ---
 
-## 3. KMS / envelope encryption for signing keys — ⛔ not started · 🔑 KMS-ready
+## 3. KMS / envelope encryption for signing keys — ✅ BUILT (2026-08-18) · was: KMS-ready
 
 **What exists (as of this session):** per-tenant signing keys are now **persisted and encrypted at
 rest** (`tenant_signing_key`, AES-256-GCM via a single application-held key). The store is behind the
