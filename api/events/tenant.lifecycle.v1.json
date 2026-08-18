@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aegis.io/events/tenant.lifecycle.v1.json",
+  "title": "Tenant lifecycle event (v1)",
+  "description": "Business/integration event published by tenant-service on the aegis.tenant.lifecycle topic, keyed by tenant slug. Consumed by services that react to tenant lifecycle (e.g. the authorization-server eagerly provisions the tenant signing key on tenant.created). Distinct from audit events (aegis.audit.events).",
+  "type": "object",
+  "required": ["eventType", "tenantId", "slug", "occurredAt"],
+  "properties": {
+    "eventType": {
+      "type": "string",
+      "enum": ["tenant.created", "tenant.suspended", "tenant.deleted"],
+      "description": "The lifecycle transition. Consumers ignore types they do not handle."
+    },
+    "tenantId": { "type": "string", "description": "Tenant identifier (currently equals slug)." },
+    "slug":     { "type": "string", "description": "DNS-safe tenant slug (per-tenant issuer path)." },
+    "name":     { "type": "string", "description": "Human-readable tenant name (may be absent)." },
+    "occurredAt": { "type": "string", "format": "date-time", "description": "When the transition occurred (ISO-8601)." }
+  },
+  "additionalProperties": true,
+  "x-delivery": "at-least-once; consumers MUST be idempotent",
+  "x-note": "Consumers read tolerantly (unknown fields ignored) so the producer can add fields without breaking a rolling deploy. A new required field or a semantic change is a v2 (new schema + parallel topic or a version field), never an edit to v1."
+}
