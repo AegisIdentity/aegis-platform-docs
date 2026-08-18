@@ -52,20 +52,29 @@ The **choreography backbone** (ARCHITECTURE §4.4 / ADR-0003). A domain state ch
   **transactional outbox** pattern — persist the event in the same DB transaction as the state
   change and relay it to Kafka — to avoid the dual-write problem. This is a per-flow decision.
 
+**Reference implementations.** `tenant.created -> eager key provisioning` is the *floor-backed*
+example (best-effort publish; lazy provisioning is the floor). `identity.user.created -> SCIM
+outbound` is the *floor-less* example: it uses the transactional outbox (`identity-service`:
+`outbox_event` table + `OutboxRelay`), so the event survives a crash between the user's DB commit and
+the Kafka publish. The last mile — the SCIM push from an outbound task to an external downstream app —
+is not exercised in the local stack (no external SCIM target); the task creation is the verified
+cross-service reaction.
+
 ## Implemented flows
 
 | Event | Topic | Producer | Consumer | Effect | Floor |
 |---|---|---|---|---|---|
 | `tenant.created` | `aegis.tenant.lifecycle` | tenant-service | authorization-server (`TenantLifecycleConsumer`) | eager per-tenant signing-key provisioning | lazy on-first-use |
+| `identity.user.created` | `aegis.identity.user` | identity-service (**transactional outbox**) | scim-provisioning-service (`IdentityUserConsumer`) | queue an outbound provisioning task | **none — outbox** |
 
 ## Roadmap flows (designed, not built)
 
 | Event | Topic | Consumer(s) | Effect |
 |---|---|---|---|
-| `identity.user.created\|updated\|deactivated\|deleted` | `aegis.identity.user` | scim-outbound; cache invalidation; welcome flow | SCIM push to downstream apps (needs the outbox — no floor) |
 | `tenant.suspended` | `aegis.tenant.lifecycle` | authorization-server; admin-api | revoke tokens, disable sign-in, freeze policies |
 | `auth.token.issued\|revoked` | `aegis.auth.token` | revocation cache; anomaly detection | short-lived token/consent revocation lists |
 
 ## Schemas
 
 - [`tenant.lifecycle.v1.json`](tenant.lifecycle.v1.json)
+- [`identity.user.v1.json`](identity.user.v1.json)

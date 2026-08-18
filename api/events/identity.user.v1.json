@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aegis.io/events/identity.user.v1.json",
+  "title": "Identity user lifecycle event (v1)",
+  "description": "Business/integration event published by identity-service (via the transactional outbox) to aegis.identity.user, keyed by userId. Consumed by outbound provisioning (SCIM), cache invalidation, and welcome flows. Carries NO credential material.",
+  "type": "object",
+  "required": ["eventType", "tenantId", "userId", "username", "occurredAt"],
+  "properties": {
+    "eventType": { "type": "string", "enum": ["identity.user.created", "identity.user.updated", "identity.user.deactivated", "identity.user.deleted"] },
+    "tenantId":  { "type": "string" },
+    "userId":    { "type": "string", "description": "Aegis user id (UUID)." },
+    "username":  { "type": "string" },
+    "email":     { "type": "string", "description": "May be absent." },
+    "occurredAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true,
+  "x-delivery": "at-least-once via TRANSACTIONAL OUTBOX (no correctness floor — the event MUST be delivered); consumers MUST be idempotent",
+  "x-note": "Published from identity-service's outbox_event table (written in the same DB transaction as the user mutation) by OutboxRelay, so the event cannot be lost between the DB commit and the Kafka publish."
+}
