@@ -13,6 +13,8 @@ Java 21, PostgreSQL, Redis, Kafka, and Kubernetes.
 | [`architecture/adr/`](architecture/adr/) | Architecture Decision Records (ADR-0001…). |
 | [`architecture/diagrams/`](architecture/diagrams/) | draw.io diagrams — editable `.drawio` source + exported **PNG** and **PDF** (system context, auth flow, deployment). |
 | [`api/`](api/) | OpenAPI specs + event schemas per service (contract-first). |
+| [`PATENT-INVENTION-DISCLOSURE.md`](PATENT-INVENTION-DISCLOSURE.md) | **Confidential.** Invention disclosure for patent counsel — code-verified mechanisms, claim-shaped, with reduction-to-practice status. Do not publish before filing. |
+| [`PATENT-CONCEPT-DEEP-DIVE.md`](PATENT-CONCEPT-DEEP-DIVE.md) | **Confidential.** Plain-language deep-dive on the same inventions, with mermaid diagrams (drafts of the filing's FIG. 1–6). |
 
 ## The repositories (polyrepo)
 | Repo | Role | Maturity |
