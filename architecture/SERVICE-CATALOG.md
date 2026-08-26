@@ -24,8 +24,10 @@ The OIDC/OAuth2 provider and interactive login host. The heart of the platform.
 - **Data:** `JdbcRegisteredClientRepository`, `JdbcOAuth2AuthorizationService`,
   `JdbcOAuth2AuthorizationConsentService` (Spring-shipped schemas). Redis: sessions, auth-request
   state, JWKS cache, revocation.
-- **Per tenant:** issuer `https://<host>/t/{tenantId}`, signing key (`kid`) from **Vault Transit**
-  — the private key never leaves Vault (ADR-0015, supersedes the KMS-wrapping half of ADR-0007).
+- **Per tenant:** issuer `https://<host>/t/{tenantId}`, signing key (`kid`) currently from **KMS**
+  (ADR-0007). **Target:** Vault Transit, where the private key never leaves Vault (ADR-0015) — the
+  library is built but the migration (`VAULT-ARCHITECTURE.md` §7) has not run, so KMS is still the
+  live signing path.
 - **Tests:** code+PKCE end-to-end (Testcontainers), unregistered client rejected, wrong redirect_uri
   rejected, JWKS + discovery well-formed, client_credentials issues scoped token.
 

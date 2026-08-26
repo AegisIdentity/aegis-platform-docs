@@ -158,6 +158,12 @@ quotas; detection's job is fast revocation and blast-radius limitation, and this
 division of labour so nobody mistakes detection for prevention.
 
 ## ADR-0015 — HashiCorp Vault is the per-tenant key & secret substrate (supersedes ADR-0007 in part)
+> **Status: Accepted — migration NOT yet executed (as of 2026-08-26).** `aegis-vault-commons` is
+> built and tested, but the authorization server still signs using the ADR-0007 KMS path. Until the
+> migration in `VAULT-ARCHITECTURE.md` §7 runs, this ADR describes the **target**, and ADR-0007's
+> key-wrapping mechanism remains the one in force. Read the decision below as intent, not as a
+> description of the running system.
+
 **Context:** ADR-0007 wrapped per-tenant signing keys with **cloud KMS** envelope encryption. Three
 problems have surfaced. It is cloud-specific, so AWS and Azure deployments diverge exactly where they
 must not; local development has no faithful equivalent, so the most security-critical path is the

@@ -452,9 +452,29 @@ See `SERVICE-CATALOG.md` for per-service specs and `adr/` for decision records.
 | `saml-idp-service` | **Scaffold → incremental** — custom OpenSAML, highest effort. |
 | `social-broker-service` | **Scaffold → incremental** — social first, then inbound SAML. |
 | `scim-provisioning-service` | **Scaffold** — schema + connectors later. |
-| `admin-api-service` | **Scaffold** — policy/RBAC later. |
+| `admin-api-service` | **Scaffold + PDP** — per-tool consent with pinned definition hashes (ADR-0013). |
+| `agent-registry-service` | **Scaffold + drift detection** *(new 2026-08-26)* — content-addressed tools. |
+| `threat-analysis-service` | **Scaffold + 4 detectors** *(new 2026-08-26)* — heuristics only; **single-replica** until sessions move to Redis. |
 
 "Scaffold" = a buildable, secured, health-checked Spring Boot service with its security baseline and
 test harness in place, ready for feature work — not an empty folder, and not a finished product.
+
+### 11.1 Agent identity & Vault — honest status (2026-08-26)
+
+Specified and **built**: delegation chain in the audit schema (ADR-0010), protocol-agnostic agent
+core with MCP/A2A/AP2 adapters (ADR-0011), RFC 8693 delegation claims and scope-narrowing enforcement
+(ADR-0012), content-addressed tool identity and per-tool consent (ADR-0013), sequence-shaped
+detectors (ADR-0014), and the Vault substrate with an HA topology (ADR-0015/0016).
+
+Specified and **not yet built** — stated here so nobody reads the ADRs as a description of reality:
+
+| Gap | Consequence |
+|---|---|
+| **Vault → AS signing migration** not run | ADR-0015's "private keys never enter application memory" is true of the library, not of the running platform. KMS (ADR-0007) is still the live signing path. |
+| **DPoP / sender-constrained tokens** (ADR-0017) | Agent tokens are still bearer tokens, so an exfiltrated one is usable. |
+| **A2A signature verification** | The adapter takes a caller-supplied `signatureVerified` flag; nothing verifies a card signature yet. |
+| **ID-JAG grant endpoint** | The token model and validation exist; the `jwt-bearer` endpoint is not wired, so MCP Enterprise-Managed Authorization is not yet servable end-to-end. |
+| **Tenant-facing Vault broker API** | Specified in `VAULT-ARCHITECTURE.md` §5; no endpoint yet. |
+| **End-to-end integration test** | ~285 unit tests cover the pieces; the browser → agent → MCP-server path has no test across the seams. |
 Building a true Okta competitor is a multi-team, multi-quarter program; this establishes a correct,
 secure, testable foundation and fully implements the core, then iterates outward.
