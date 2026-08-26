@@ -328,8 +328,28 @@ Updated 2026-08-26 after the first implementation pass.
 | Compose HA (3-node Raft) + bootstrap | **Built** — `docker compose config` validates |
 | Helm values (EKS + AKS) | **Built** — placeholders filled from Terraform outputs |
 | Terraform unseal modules (AWS + Azure) | **Built** — `terraform fmt` clean |
-| **AS migration off KMS onto Vault Transit** | **Built, behind a flag** — `VaultJwtEncoder` + `VaultTenantSigner` sign via Transit and the JWKS endpoint publishes both key sets during overlap. Set `aegis.vault.signing.enabled=true` to cut over; default off so §7 stays reversible |
-| Tenant-facing Vault broker API | **NOT started** — specified in §5, no endpoint yet |
+| **AS migration off KMS onto Vault Transit** | **Built and ENABLED in the local stack.** `VaultJwtEncoder` + `VaultTenantSigner` sign via Transit; JWKS publishes both key sets during overlap. Verified: `kid=aegis-<tenant>-v<N>`, key `exportable=false`, downstream services accept the tokens, rotation adds a version. Default remains off elsewhere so §7 stays a reversible rotation |
+| Tenant-facing Vault broker API | **Built** — `/api/v1/tenants/{id}/vault/**`, brokered, cross-tenant ownership enforced |
+
+> ### Operational note discovered when enabling this for real (2026-08-26)
+>
+> Switching signing to Vault changes the `kid`. Two caches then matter, and both bit during the
+> first real cutover:
+>
+> 1. **Resource servers cache the JWK set.** Until a service refetches, it rejects tokens signed with
+>    the new `kid` — a bare 401 on an endpoint that worked minutes earlier. It resolves on refresh;
+>    a restart forces it.
+> 2. **The authorization server caches its own outbound service token** for 5 minutes. So the
+>    AS→identity-service call keeps presenting a token signed with the previous key until that
+>    expires, and login fails in the meantime with `BadCredentialsException` — which points at the
+>    password, not at the key change.
+>
+> Neither is a defect in the design, but both are invisible from the code and expensive to diagnose
+> live. Enable Vault signing during a maintenance window, or roll resource servers immediately after.
+>
+> A third issue *was* a real defect and is fixed: the AS's own `JwtDecoder` and its published JWKS
+> were separate lists, so the AS rejected tokens signed with a key it was itself advertising. Both
+> now derive from one `AggregateVerificationKeys` component.
 
 **The honest headline:** the signing path now exists and is tested — `VaultJwtEncoder` assembles the
 JWS locally and sends only the *signing input* to Vault, so no private key enters the process. It is

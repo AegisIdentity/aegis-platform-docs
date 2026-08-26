@@ -1,0 +1,23 @@
+# Files whose exposure is already KNOWN and whose remediation is a pending human decision.
+#
+# Listing a path here does not make it safe — it records that we are aware, so the check can still
+# fail loudly on anything NEW while this decision is outstanding. A permanently-red gate is a gate
+# people switch off, and a switched-off gate is how the next one of these happens.
+#
+# STATUS 2026-08-26
+# -----------------
+# Both files below were committed to this PUBLIC repository and have been world-readable since
+# commit 53dec77 (2026-08-18). Discovered 2026-08-26.
+#
+# They carry a "CONFIDENTIAL — do not publish before filing" header. That header is a note to
+# humans; it prevented nothing. Under 35 U.S.C. 102(b)(1) this starts a 12-month US clock
+# (bar date approx. 2027-08-18); in absolute-novelty jurisdictions (EPO, China, most others) a
+# pre-filing public disclosure is prior art against the applicant's own later application.
+#
+# Deliberately NOT removed: deleting them does not undo the disclosure, and rewriting history may
+# complicate the evidentiary record. Remediation is counsel's call.
+#
+# The updated v3 documents — which contain material that has NOT been disclosed — live outside every
+# git repository, in the workspace root under PATENT-CONFIDENTIAL-DO-NOT-COMMIT/.
+PATENT-INVENTION-DISCLOSURE.md
+PATENT-CONCEPT-DEEP-DIVE.md
