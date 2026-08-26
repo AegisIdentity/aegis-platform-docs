@@ -395,20 +395,23 @@ Updated 2026-08-26 after the first implementation pass. Test counts are unit tes
 | Delegation chain in `aegis-audit-commons` | **Built** — 43/43. Additive; 9-arg constructor preserved |
 | `aegis-agent-commons` core + MCP/A2A/AP2 adapters | **Built** — 52/52 |
 | RFC 8693 delegation claims + scope narrowing (AS) | **Built** — 34/34 (96/96 AS suite) |
-| ID-JAG model + validation | **Built**; the `jwt-bearer` grant *endpoint* wiring is not yet done |
+| ID-JAG model, validation **and grant endpoint** | **Built** — MCP EMA servable end-to-end, gated on an issuer allow-list |
 | Agent principal + owner edge (`identity-service`) | **Built** — 26/26 |
 | Per-tenant agent policy (`tenant-service`) | **Built** — 20/20 |
 | MCP header enforcement + per-agent quotas (gateway) | **Built** — 44/44 |
 | PDP + per-tool consent (`admin-api-service`) | **Built** — 22/22 |
 | `agent-registry-service` | **Scaffold + drift detection** — 7/7 |
 | `threat-analysis-service` | **Scaffold + 4 detectors** — 13/13 |
-| DPoP sender-constrained tokens (ADR-0017) | **Specified, not implemented** |
-| A2A signature *verification* | **Not implemented** — the adapter takes a `signatureVerified` flag from its caller |
+| DPoP sender-constrained tokens (ADR-0017) | **Built** — agent clients refused bearer; `cnf.jkt` bound to the RFC 7638 thumbprint |
+| A2A signature *verification* | **Built** — real JWS verification against a per-tenant trust store (`A2aCardVerifier`) |
 | Detection models | heuristics only; ML explicitly later per ADR-0014 |
 
-**Not yet wired end-to-end.** The pieces above are individually tested but the full
-browser → agent → MCP-server path has no integration test yet; that needs a running stack and is the
-natural next step.
+**End-to-end status.** `AgentDelegationFlowIT` now exercises the real grant pipeline against a real
+Postgres — DPoP enforcement, delegation claims, scope-narrowing refusal, the gated ID-JAG grant and
+JWKS well-formedness. It found two defects on its first run that 149 unit tests had missed, both in
+how correct components were *assembled* rather than in the components themselves. The remaining gap
+is a genuine cross-service flow (browser → gateway → agent → MCP server), which needs a running
+compose stack rather than a Maven test.
 
 **Two dependencies that make this weaker if left undone,** stated so they are not discovered late:
 

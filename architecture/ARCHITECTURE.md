@@ -466,15 +466,33 @@ core with MCP/A2A/AP2 adapters (ADR-0011), RFC 8693 delegation claims and scope-
 (ADR-0012), content-addressed tool identity and per-tool consent (ADR-0013), sequence-shaped
 detectors (ADR-0014), and the Vault substrate with an HA topology (ADR-0015/0016).
 
-Specified and **not yet built** — stated here so nobody reads the ADRs as a description of reality:
+The gaps listed here previously have now been closed (2026-08-26, second pass):
+
+| Item | Status |
+|---|---|
+| **Vault → AS signing** | **Built.** `VaultJwtEncoder` assembles the JWS locally and sends only the signing input to Vault, so no private key enters the process. Behind `aegis.vault.signing.enabled` because §7 is a reversible rotation, not a switch. |
+| **DPoP / sender-constrained tokens** | **Built.** Agent clients are refused bearer tokens; tokens carry `cnf.jkt` bound to the RFC 7638 thumbprint. Human clients keep bearer. |
+| **A2A signature verification** | **Built.** Real RFC 7515 JWS verification against a per-tenant trust store; a tampered card or an untrusted signer is refused. |
+| **ID-JAG grant endpoint** | **Built.** RFC 7523 `jwt-bearer` converter + provider, gated on an explicit issuer allow-list. MCP EMA is servable end-to-end. |
+| **Tenant-facing Vault broker** | **Built.** `/api/v1/tenants/{id}/vault/**`, brokered, with cross-tenant ownership enforced. |
+| **Multi-replica threat analysis** | **Built.** Sessions in a shared store; set `aegis.threat.session.shared=true`. |
+| **End-to-end integration test** | **Built.** `AgentDelegationFlowIT` exercises the real grant pipeline. It immediately found two defects no unit test could see — see below. |
+
+> **What the end-to-end test caught, and why it matters.** With 149 unit tests passing, every issued
+> token had silently lost its `tenant` claim. Two token customizers both implement
+> `OAuth2TokenCustomizer<JwtEncodingContext>`, and registering them as beans left Spring
+> Authorization Server with an ambiguous by-type match — so it used **none**, with no exception and no
+> log. Tenant resolution across every downstream service would have broken. It also found that the
+> dev agent client reused another client's secret, which made the dev profile fail to start. Both
+> defects lived purely in how correct components were *assembled*, which is precisely the region unit
+> tests cannot reach.
+
+**Still open**, stated plainly:
 
 | Gap | Consequence |
 |---|---|
-| **Vault → AS signing migration** not run | ADR-0015's "private keys never enter application memory" is true of the library, not of the running platform. KMS (ADR-0007) is still the live signing path. |
-| **DPoP / sender-constrained tokens** (ADR-0017) | Agent tokens are still bearer tokens, so an exfiltrated one is usable. |
-| **A2A signature verification** | The adapter takes a caller-supplied `signatureVerified` flag; nothing verifies a card signature yet. |
-| **ID-JAG grant endpoint** | The token model and validation exist; the `jwt-bearer` endpoint is not wired, so MCP Enterprise-Managed Authorization is not yet servable end-to-end. |
-| **Tenant-facing Vault broker API** | Specified in `VAULT-ARCHITECTURE.md` §5; no endpoint yet. |
-| **End-to-end integration test** | ~285 unit tests cover the pieces; the browser → agent → MCP-server path has no test across the seams. |
+| Cross-service E2E (browser → gateway → agent → MCP server) | The AS-side seam is covered; a full multi-service flow needs a running compose stack and is not a Maven test. |
+| Vault signing not yet enabled in any environment | The code path is tested, but ADR-0015's claim only becomes true of an environment once `aegis.vault.signing.enabled=true` there. |
+| Detection models | Heuristics only; ML explicitly later per ADR-0014. |
 Building a true Okta competitor is a multi-team, multi-quarter program; this establishes a correct,
 secure, testable foundation and fully implements the core, then iterates outward.
