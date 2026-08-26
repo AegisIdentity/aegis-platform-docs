@@ -10,6 +10,8 @@ Java 21, PostgreSQL, Redis, Kafka, and Kubernetes.
 | [`architecture/ARCHITECTURE.md`](architecture/ARCHITECTURE.md) | Main architecture spec — scope, service decomposition, data, multi-tenancy, auth mechanisms, deployment. **Start here.** |
 | [`architecture/SERVICE-CATALOG.md`](architecture/SERVICE-CATALOG.md) | Per-service contract: responsibility, endpoints, datastore, maturity. |
 | [`architecture/THREAT-MODEL.md`](architecture/THREAT-MODEL.md) | STRIDE threat model + OWASP/CVE watch-list + CI assurance. |
+| [`architecture/AGENT-IDENTITY-ARCHITECTURE.md`](architecture/AGENT-IDENTITY-ARCHITECTURE.md) | AI **agent identity & threat analysis** — delegation chains, MCP / A2A / AP2 / A2P, tool-hash consent, sequence-shaped detection. Framework- and SDK-agnostic. |
+| [`architecture/VAULT-ARCHITECTURE.md`](architecture/VAULT-ARCHITECTURE.md) | **HashiCorp Vault** — per-tenant key & secret substrate, HA topology, key generation, and Vault-as-a-service for tenants. |
 | [`architecture/adr/`](architecture/adr/) | Architecture Decision Records (ADR-0001…). |
 | [`architecture/diagrams/`](architecture/diagrams/) | draw.io diagrams — editable `.drawio` source + exported **PNG** and **PDF** (system context, auth flow, deployment). |
 | [`api/`](api/) | OpenAPI specs + event schemas per service (contract-first). |
@@ -31,6 +33,8 @@ Java 21, PostgreSQL, Redis, Kafka, and Kubernetes.
 | `aegis-social-broker-service` | social + inbound SAML/OIDC federation | scaffold |
 | `aegis-scim-provisioning-service` | SCIM 2.0 in/outbound | scaffold |
 | `aegis-admin-api-service` | admin/console API, policy, RBAC | scaffold |
+| `aegis-agent-registry-service` | AI agents, tools, MCP servers, A2A agent cards | scaffold |
+| `aegis-threat-analysis-service` | agent behavioural threat detection | scaffold |
 | `aegis-platform-infra` | docker-compose, Terraform (AWS/Azure), Helm, CI | infra |
 
 ## Diagrams

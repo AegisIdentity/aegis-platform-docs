@@ -33,6 +33,10 @@ Kafka, Kubernetes) because those choices have already been made and verified aga
 | SCIM 2.0 provisioning (in/outbound) | Okta Lifecycle Management | `scim-provisioning-service` |
 | Admin & management API + console backend | Okta Admin | `admin-api-service` |
 | Edge routing, tenant resolution, rate limiting, WAF hooks | Okta edge | `edge-gateway` |
+| **AI agent & non-human identity** (delegation chains, agent lifecycle, owner accountability) | Okta for AI Agents | `identity-service` + `agent-registry-service` |
+| **Agent protocol authorization** — MCP, A2A, AP2 (framework/SDK agnostic) | *(emerging category)* | `authorization-server` + `agent-registry-service` + `edge-gateway` |
+| **Agent behavioural threat analysis** (sequence-shaped detection, delegation anomalies) | Okta ITP / Behavior Detection | `threat-analysis-service` |
+| **Secrets, key management & key generation as a service** (per-tenant Vault: transit, KV v2, PKI) | *(HashiCorp Vault; no Okta analogue)* | `aegis-vault-commons` + `admin-api-service` |
 
 ### 1.2 Explicitly out of scope (for now — stated so nobody assumes otherwise)
 
@@ -41,7 +45,19 @@ Kafka, Kubernetes) because those choices have already been made and verified aga
   authorization-server only, flagged as reference UI to be replaced.
 - **On-prem LDAP/AD agent** (Okta AD Agent). Direct LDAP/AD *bind* auth is supported in-cluster; a
   customer-premises sync agent is a later program.
-- Adaptive/risk-based auth ML, Workflows/automation engine, API gateway product — later phases.
+- **Workflows/automation engine** and a general-purpose **API gateway product** — later phases.
+
+> **Scope change — 2026-08-26 (supersedes the previous exclusion).** This section previously read
+> *"Adaptive/risk-based auth ML, Workflows/automation engine, API gateway product — later phases."*
+> **Adaptive/risk-based analysis is now explicitly IN scope**, narrowed to the agent domain:
+> behavioural threat analysis for AI agents and their tool invocations (see
+> [`AGENT-IDENTITY-ARCHITECTURE.md`](AGENT-IDENTITY-ARCHITECTURE.md) and ADR-0014). The exclusion
+> was written when the platform's only principals were humans and long-lived service clients, where
+> risk ML is a nice-to-have. It does not survive contact with agent workloads: an agent's authority
+> is *delegated*, *transitive*, and *exercised at machine speed*, so anomaly detection stops being a
+> premium add-on and becomes the only control that can catch a delegation chain being abused after
+> the token was legitimately issued. Risk analysis for **human** interactive login remains out of
+> scope for now.
 
 ### 1.3 Honesty statement on "no pen-test findings / zero vulnerabilities"
 

@@ -18,11 +18,14 @@ The OIDC/OAuth2 provider and interactive login host. The heart of the platform.
 - **Login:** server-rendered `/login` (Thymeleaf, reference UI), password verified against
   `identity-service`; optional social redirect to `social-broker-service`; optional MFA step-up to
   `mfa-webauthn-service`.
-- **Grants:** authorization_code + PKCE, client_credentials (M2M), refresh_token (rotated), device.
+- **Grants:** authorization_code + PKCE, client_credentials (M2M), refresh_token (rotated), device,
+  **token-exchange** (RFC 8693 — delegation, `act`/`may_act`, audience narrowing) and
+  **jwt-bearer** (RFC 7523 — ID-JAG redemption for MCP Enterprise-Managed Authorization). ADR-0012.
 - **Data:** `JdbcRegisteredClientRepository`, `JdbcOAuth2AuthorizationService`,
   `JdbcOAuth2AuthorizationConsentService` (Spring-shipped schemas). Redis: sessions, auth-request
   state, JWKS cache, revocation.
-- **Per tenant:** issuer `https://<host>/t/{tenantId}`, signing key (`kid`) from KMS.
+- **Per tenant:** issuer `https://<host>/t/{tenantId}`, signing key (`kid`) from **Vault Transit**
+  — the private key never leaves Vault (ADR-0015, supersedes the KMS-wrapping half of ADR-0007).
 - **Tests:** code+PKCE end-to-end (Testcontainers), unregistered client rejected, wrong redirect_uri
   rejected, JWKS + discovery well-formed, client_credentials issues scoped token.
 
@@ -96,6 +99,41 @@ downstream apps). Consumes `identity.user.*` events for outbound.
 **Repo:** `aegis-admin-api-service` · **Store:** PostgreSQL · **Port:** 9107
 Admin/console backend: policy management, admin RBAC, API tokens, tenant settings, System-Log query
 API over the audit event store.
+- **PDP** *(new)*: the platform's policy decision point, including **per-tool consent with pinned
+  definition hashes** — the existing `JdbcOAuth2AuthorizationConsentService` is scope-granular and
+  cannot express "I approved *this version* of this tool" (ADR-0013).
+- **Vault broker** *(new)*: `/api/v1/tenants/{id}/vault/**` exposes Key- and Secrets-Management as a
+  service. Brokered — tenants never receive a raw Vault token; the platform mints short-lived,
+  path-scoped child tokens per request, with the tenant segment always derived server-side from
+  `TenantContext` (ADR-0016).
+
+## agent-registry-service  ·  Maturity: scaffold  *(new 2026-08-26)*
+**Repo:** `aegis-agent-registry-service` · **Store:** PostgreSQL · **Port:** 9108
+System of record for non-human, delegated principals and the things they call. Protocol-agnostic core
+with per-protocol adapters (ADR-0011).
+- **API:** `/api/v1/agents` CRUD (each agent carries an **owner edge** — the accountable human or
+  service), `/api/v1/agents/{id}/instances`, `/api/v1/tools` (content-addressed
+  `server_id + tool_name + definition_hash`, ADR-0013), `/api/v1/mcp-servers`,
+  `/api/v1/agent-cards` (A2A, signature-verified).
+- **Protocols:** MCP rev `2026-07-28`, A2A v1.0, AP2 v0.2.0 — adapters only; the core model names no
+  protocol and no vendor SDK.
+- **Events:** `agent.registered|updated|revoked`, `agent.tool.drift` (pinned definition hash no
+  longer matches — the rug-pull signal).
+- **Tests:** owner edge required on create, tool hash pinning + drift detection, unsigned A2A card
+  yields zero authority, cross-tenant agent read denied.
+
+## threat-analysis-service  ·  Maturity: scaffold  *(new 2026-08-26)*
+**Repo:** `aegis-threat-analysis-service` · **Store:** PostgreSQL + Redis · **Port:** 9109
+Behavioural detection for agent principals. Consumes `aegis.audit.events` **asynchronously — never on
+the token path** (ADR-0014).
+- **Signals:** tool-call entropy, high-risk tool *pairings*, delegation-chain depth/drift,
+  task-envelope deviation, scope-narrowing violations (delegation laundering).
+- **Inputs:** delegation chain from `aegis-audit-commons` (ADR-0010). Operates on **canonical
+  fingerprints only** — never raw tool arguments or results, which is how the platform's
+  "audit events never carry secrets" rule and threat analysis coexist.
+- **Outputs:** `agent.risk.scored`, `agent.risk.alert`; drives async revocation, never inline denial.
+- **Tests:** known-bad sequence scored above threshold, benign high-rate traffic not flagged,
+  fingerprint-only (a test asserts no raw argument value ever reaches the store).
 
 ---
 
