@@ -304,11 +304,20 @@ Step 2→3 is reversible; step 4 is the point of no return, gated on TTL expiry 
 
 ## 8. Build status
 
+Updated 2026-08-26 after the first implementation pass.
+
 | Item | Status |
 |---|---|
 | ADR-0015, ADR-0016 | **Accepted** |
 | This specification | **Written** |
-| `aegis-vault-commons` | see repo — TDD, tests first |
-| Compose HA (3-node Raft) | see `aegis-platform-infra/compose` |
-| Helm / Terraform | see `aegis-platform-infra` |
-| AS migration off KMS | **not started** — sequenced after `aegis-vault-commons` |
+| `aegis-vault-commons` (transit, KV v2, PKI paths) | **Built** — 30/30 unit tests |
+| `TenantVaultPaths` traversal/injection defences | **Built** — 10 hostile inputs covered |
+| Compose HA (3-node Raft) + bootstrap | **Built** — `docker compose config` validates |
+| Helm values (EKS + AKS) | **Built** — placeholders filled from Terraform outputs |
+| Terraform unseal modules (AWS + Azure) | **Built** — `terraform fmt` clean |
+| **AS migration off KMS onto Vault Transit** | **NOT started** — the signing path still uses the ADR-0007 KMS route |
+| Tenant-facing Vault broker API | **NOT started** — specified in §5, no endpoint yet |
+
+**The honest headline:** the Vault substrate exists and is tested, but nothing signs tokens with it
+yet. Until the §7 migration runs, ADR-0015's central claim — that private keys never enter
+application memory — is true of the *library* and not yet of the *running platform*.

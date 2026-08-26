@@ -386,16 +386,29 @@ agentPolicy:
 
 Per the platform's honesty convention (`ARCHITECTURE.md` §1.3), status is stated plainly.
 
+Updated 2026-08-26 after the first implementation pass. Test counts are unit tests only.
+
 | Component | Status |
 |---|---|
-| ADR-0010 … ADR-0017 | **Accepted** — this document's decisions are recorded |
+| ADR-0010 … ADR-0017 | **Accepted** |
 | Scope reopening (§1.2) | **Done** |
-| Delegation chain in `aegis-audit-commons` | see repo — TDD, tests first |
-| `aegis-agent-commons` core model + adapters | see repo — TDD, tests first |
-| RFC 8693 exchange (SAS-native) | SAS 7.1.0 ships `OAuth2TokenExchangeAuthenticationProvider` |
-| RFC 7523 `jwt-bearer` / ID-JAG | **not in SAS 7.1.0** — ours to build |
-| `agent-registry-service`, `threat-analysis-service` | new services |
-| Detection models | heuristics first; ML explicitly later |
+| Delegation chain in `aegis-audit-commons` | **Built** — 43/43. Additive; 9-arg constructor preserved |
+| `aegis-agent-commons` core + MCP/A2A/AP2 adapters | **Built** — 52/52 |
+| RFC 8693 delegation claims + scope narrowing (AS) | **Built** — 34/34 (96/96 AS suite) |
+| ID-JAG model + validation | **Built**; the `jwt-bearer` grant *endpoint* wiring is not yet done |
+| Agent principal + owner edge (`identity-service`) | **Built** — 26/26 |
+| Per-tenant agent policy (`tenant-service`) | **Built** — 20/20 |
+| MCP header enforcement + per-agent quotas (gateway) | **Built** — 44/44 |
+| PDP + per-tool consent (`admin-api-service`) | **Built** — 22/22 |
+| `agent-registry-service` | **Scaffold + drift detection** — 7/7 |
+| `threat-analysis-service` | **Scaffold + 4 detectors** — 13/13 |
+| DPoP sender-constrained tokens (ADR-0017) | **Specified, not implemented** |
+| A2A signature *verification* | **Not implemented** — the adapter takes a `signatureVerified` flag from its caller |
+| Detection models | heuristics only; ML explicitly later per ADR-0014 |
+
+**Not yet wired end-to-end.** The pieces above are individually tested but the full
+browser → agent → MCP-server path has no integration test yet; that needs a running stack and is the
+natural next step.
 
 **Two dependencies that make this weaker if left undone,** stated so they are not discovered late:
 
