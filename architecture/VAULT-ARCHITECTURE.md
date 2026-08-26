@@ -113,13 +113,24 @@ flowchart LR
     style OSS fill:#1e3050,stroke:#7fb3ff,color:#e8f2ff
 ```
 
-**Path convention (OSS):**
+**Path convention (OSS) — one shared mount per engine:**
 
 ```
-aegis/{tenant}/transit/keys/{purpose}      # purpose: token-signing | saml-signing | tenant-managed
-aegis/{tenant}/kv/data/{path}
-aegis/{tenant}/pki/issue/{role}
+aegis/transit/keys/{tenant}-{purpose}      # purpose: token-signing | saml-signing | tenant-managed-*
+aegis/transit/sign/{tenant}-{purpose}
+aegis/kv/data/{tenant}/{path}
+aegis/pki/issue/{tenant}-{role}
 ```
+
+> **Why the tenant is a name *prefix* for transit but a path *segment* for KV.** A transit key name
+> is a single URL path segment and cannot contain `/`, so the tenant has to be part of the name. KV
+> v2 genuinely supports nested paths, so there it is a segment.
+>
+> The intuitive alternative — a mount per tenant, `aegis/{tenant}/transit/…` — is a **scaling dead
+> end**. Vault caps mounts at roughly **14,000** on Integrated Storage, and every additional mount
+> lengthens leadership transfer, so per-tenant mounts put a hard ceiling on tenant count and degrade
+> failover long before that ceiling is reached. Isolation comes instead from per-tenant policies
+> globbing the prefix (`path "aegis/transit/keys/acme-*"`), which costs nothing and scales.
 
 **Non-negotiable, and enforced by a mandatory negative test:** the `{tenant}` segment is **always**
 derived server-side from `TenantContext` and templated into the path. A tenant-supplied path string
@@ -130,11 +141,13 @@ Generated per-tenant policy:
 
 ```hcl
 # policy: aegis-tenant-acme
-path "aegis/acme/transit/keys/tenant-managed/*" { capabilities = ["create","read","update","list"] }
-path "aegis/acme/transit/sign/*"                { capabilities = ["update"] }
-path "aegis/acme/kv/data/*"                     { capabilities = ["create","read","update","delete","list"] }
+path "aegis/transit/keys/acme-tenant-managed-*"   { capabilities = ["create","read","update","list"] }
+path "aegis/transit/sign/acme-tenant-managed-*"   { capabilities = ["update"] }
+path "aegis/transit/verify/acme-tenant-managed-*" { capabilities = ["update"] }
+path "aegis/kv/data/acme/*"                       { capabilities = ["create","read","update","delete","list"] }
 # platform-internal keys are NOT reachable by the tenant token:
-path "aegis/acme/transit/keys/token-signing"    { capabilities = ["deny"] }
+path "aegis/transit/keys/acme-token-signing"      { capabilities = ["deny"] }
+path "aegis/transit/sign/acme-token-signing"      { capabilities = ["deny"] }
 ```
 
 Note the final rule: a tenant can manage *its own* keys but can never touch the key Aegis uses to
@@ -315,9 +328,12 @@ Updated 2026-08-26 after the first implementation pass.
 | Compose HA (3-node Raft) + bootstrap | **Built** — `docker compose config` validates |
 | Helm values (EKS + AKS) | **Built** — placeholders filled from Terraform outputs |
 | Terraform unseal modules (AWS + Azure) | **Built** — `terraform fmt` clean |
-| **AS migration off KMS onto Vault Transit** | **NOT started** — the signing path still uses the ADR-0007 KMS route |
+| **AS migration off KMS onto Vault Transit** | **Built, behind a flag** — `VaultJwtEncoder` + `VaultTenantSigner` sign via Transit and the JWKS endpoint publishes both key sets during overlap. Set `aegis.vault.signing.enabled=true` to cut over; default off so §7 stays reversible |
 | Tenant-facing Vault broker API | **NOT started** — specified in §5, no endpoint yet |
 
-**The honest headline:** the Vault substrate exists and is tested, but nothing signs tokens with it
-yet. Until the §7 migration runs, ADR-0015's central claim — that private keys never enter
-application memory — is true of the *library* and not yet of the *running platform*.
+**The honest headline:** the signing path now exists and is tested — `VaultJwtEncoder` assembles the
+JWS locally and sends only the *signing input* to Vault, so no private key enters the process. It is
+**off by default**, because §7 is a rotation: the new `kid` must appear in JWKS before it signs, and
+the old KMS `kid` must stay verifiable until its tokens expire. The flag is what makes those steps
+separable and the cutover reversible. ADR-0015's claim becomes true of a given environment the moment
+that environment sets `aegis.vault.signing.enabled=true`.
